@@ -1,0 +1,336 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Lato', sans-serif;
+}
+
+:root {
+    --primary: #e50914;
+    --dark: #0a0a0a;
+    --medium: #1a1a1a;
+    --light: #f5f5f5;
+    --gray: #cccccc;
+    --card-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    --transition: all 0.3s ease;
+}
+
+body {
+    background: var(--dark);
+    color: var(--light);
+    overflow-x: hidden;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    transition: background 0.3s ease;
+    flex-wrap: wrap;
+}
+
+.navbar.scrolled {
+    background: rgba(0, 0, 0, 0.95);
+}
+
+.logo {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.search-container {
+    flex: 1;
+    max-width: 500px;
+    margin: 0 20px;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 30px;
+    transition: var(--transition);
+}
+
+.search-box:focus-within {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(229, 9, 20, 0.2);
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    color: var(--gray);
+    z-index: 2;
+}
+
+#search-input {
+    width: 100%;
+    padding: 14px 20px 14px 45px;
+    border-radius: 30px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+#search-input:focus {
+    outline: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-link {
+    color: var(--light);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.nav-link:hover {
+    color: var(--primary);
+}
+
+.main-content {
+    padding: 150px 5% 50px;
+}
+
+.hero-title {
+    font-size: 2.8rem;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeInUp 1s ease forwards;
+    text-align: center;
+    position: relative;
+    padding-bottom: 20px;
+}
+
+.hero-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--primary);
+    border-radius: 2px;
+}
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    padding: 20px 0;
+}
+
+.movie-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transform: translateY(20px);
+    opacity: 0;
+    animation: fadeInUp 0.8s ease forwards;
+    transition: var(--transition);
+    box-shadow: var(--card-shadow);
+}
+
+.movie-card:nth-child(1) { animation-delay: 0.2s; }
+.movie-card:nth-child(2) { animation-delay: 0.4s; }
+.movie-card:nth-child(3) { animation-delay: 0.6s; }
+.movie-card:nth-child(4) { animation-delay: 0.8s; }
+.movie-card:nth-child(5) { animation-delay: 1s; }
+
+.movie-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(229,9,20,0.3);
+}
+
+.movie-image {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    border-radius: 12px;
+    transition: var(--transition);
+}
+
+.movie-card:hover .movie-image {
+    transform: scale(1.05);
+}
+
+.movie-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 25px;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 100%);
+}
+
+.movie-title {
+    font-size: 1.4rem;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.movie-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.9rem;
+    color: var(--gray);
+}
+
+.movie-meta span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.loader {
+    display: none;
+    text-align: center;
+    padding: 40px 0;
+    grid-column: 1 / -1;
+}
+
+.loader-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.1);
+    border-top: 5px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 0;
+    color: var(--gray);
+}
+
+.no-results i {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+.no-results h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    .navbar {
+        padding: 15px 5%;
+    }
+    
+    .logo {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .logo {
+        order: 1;
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+        order: 2;
+    }
+    
+    .search-container {
+        order: 4;
+        max-width: 100%;
+        margin: 15px 0 0;
+        width: 100%;
+    }
+    
+    .nav-links {
+        display: none;
+        order: 3;
+        width: 100%;
+        flex-direction: column;
+        gap: 15px;
+        padding-top: 15px;
+    }
+    
+    .nav-links.active {
+        display: flex;
+    }
+    
+    .main-content {
+        padding-top: 130px;
+    }
+    
+    .hero-title {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .movie-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .movie-image {
+        height: 400px;
+    }
+    
+    .hero-title {
+        font-size: 1.8rem;
+    }
+}

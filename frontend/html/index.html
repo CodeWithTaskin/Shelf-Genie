@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShelfGenie - Your next favorite book powered by AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/frontend/css/landing.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-film"></i>
+            ShelfGenie
+        </div>
+        
+        <button class="mobile-menu-btn" id="mobile-menu-btn">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="nav-links" id="nav-links">
+            <a href="https://github.com/CodeWithTaskin" class="nav-link">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+            <a href="https://www.linkedin.com/in/farjhan-ahmed/" class="nav-link">
+                <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+            <a href="https://farjhanahmed.pages.dev/" class="nav-link">
+                <i class="fas fa-user"></i> About Me
+            </a>
+        </div>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search movies...">
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <h1 class="hero-title">Featured Movies</h1>
+        <div class="movie-grid" id="movie-grid"></div>
+        <div class="loader" id="loader" style="display: none;">
+            <div class="loader-spinner"></div>
+            <p>Loading movies...</p>
+        </div>
+    </main>
+
+    <script src="/frontend/js/landing.js"></script>
+</body>
+</html>
