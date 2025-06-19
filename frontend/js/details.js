@@ -3,6 +3,7 @@ const movies = Array(30)
   .map((_, i) => {
     const movieTitles = [
       'The Dark Knight',
+      'Harry Potter and the Prisoner of Azkaban (Book 3)',
       'Inception',
       'Pulp Fiction',
       'Forrest Gump',

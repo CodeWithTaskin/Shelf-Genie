@@ -107,7 +107,7 @@ const renderMovies = movies => {
     movieGrid.innerHTML = `
             <div class="no-results">
                 <i class="fas fa-film"></i>
-                <h3>No Movies Found</h3>
+                <h3>No Books Found</h3>
                 <p>Try a different search term</p>
             </div>
         `;
