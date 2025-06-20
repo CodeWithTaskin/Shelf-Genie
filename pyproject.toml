@@ -1,0 +1,11 @@
+[project]
+name = "src"
+version = "0.0.1"
+description = "ShelfGenie is an AI-powered book recommendation system that delivers personalized reading suggestions using NLP and hybrid filtering. It analyzes book metadata and user behavior to recommend titles that match interests, enabling smarter discovery for readers, learners, and educators."
+authors = [{name = "Farjhan Ahmed", email = "farjhanahmed@gmail.com"}]
+
+[tool.setuptools]
+packages = {find = {}}
+
+[tool.setuptools.dynamic]
+dependencies = {file = "requirements.txt"}
