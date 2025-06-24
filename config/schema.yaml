@@ -1,0 +1,17 @@
+columns:
+  - User-ID
+  - ISBN
+  - Book-Rating
+  - Book-Title
+  - Book-Author
+  - Year-Of-Publication
+  - Publisher
+  - Image-URL-S
+  - Image-URL-M
+  - Image-URL-L
+  - num_of_reating
+  - avg_of_reating
+
+drop_column:
+  - _id
+  - Unnamed
