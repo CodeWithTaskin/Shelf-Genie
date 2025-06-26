@@ -19,3 +19,15 @@ INGESTED_FILE_NAME: str = 'clean_data.csv'
 FEATURE_STORE_FOLDER_NAME: str = 'feature_store'
 FEATURE_STORE_FILE_NAME: str = 'data.csv'
 
+# Data Validation consents starts from VALIDATION_REPORT_FILE variable
+
+VALIDATION_REPORT_FILE: str = 'report.json'
+DATA_VALIDATION_REPORT_FOLDER_NAME: str = 'data_validation'
+
+# Data Transformation consents starts from TRANSFORMATION_FILE_NAME variable
+
+TRANSFORMED_DF_FOLDER_NAME: str = 'data'
+TRANSFORMED_FOLDER_NAME: str = 'vector'
+TRANSFORMED_DF_FILE_NAME: str = 'book.pkl'
+TRANSFORMED_FILE_NAME: str = 'vectorize.pkl'
+TRANSFORMATION_FOLDER_PATH: str = 'data_transformation'

@@ -1,5 +1,5 @@
-import yaml
 import sys
+import yaml
 
 from src.exception import MyException
 

@@ -1,4 +1,5 @@
 columns:
+  - 'Unnamed: 0'
   - User-ID
   - ISBN
   - Book-Rating
@@ -14,4 +15,3 @@ columns:
 
 drop_column:
   - _id
-  - Unnamed
