@@ -30,3 +30,9 @@ class DataTransformationConfig:
     transformed_df_folder_path: str = os.path.join(data_transformation_folder_path, TRANSFORMED_DF_FOLDER_NAME)
     transformed_df_file_path: str = os.path.join(transformed_df_folder_path, TRANSFORMED_DF_FILE_NAME)
     vectorize_file_path: str = os.path.join(data_transformed_folder_path, TRANSFORMED_FILE_NAME)
+    
+@dataclass
+class ModelTrainerConfig:
+    model_trainer_folder_path : str = os.path.join(pipeline_config.artifact_dir, MODEL_TRAINER_FOLDER_PATH)
+    model_folder_path : str = os.path.join(model_trainer_folder_path, MODEL_FOLDER_NAME)
+    model_file_name : str = os.path.join(model_folder_path, MODEL_FILE_NAME)

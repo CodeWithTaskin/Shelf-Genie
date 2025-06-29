@@ -28,6 +28,12 @@ DATA_VALIDATION_REPORT_FOLDER_NAME: str = 'data_validation'
 
 TRANSFORMED_DF_FOLDER_NAME: str = 'data'
 TRANSFORMED_FOLDER_NAME: str = 'vector'
-TRANSFORMED_DF_FILE_NAME: str = 'book.pkl'
+TRANSFORMED_DF_FILE_NAME: str = 'top_book.pkl'
 TRANSFORMED_FILE_NAME: str = 'vectorize.pkl'
 TRANSFORMATION_FOLDER_PATH: str = 'data_transformation'
+
+# Model Trainer consents starts from MODEL_TRAINER_FOLDER_PATH variable
+
+MODEL_TRAINER_FOLDER_PATH: str = 'model_trainer'
+MODEL_FOLDER_NAME: str = 'model'
+MODEL_FILE_NAME: str = 'model.pkl'

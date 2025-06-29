@@ -13,3 +13,7 @@ class DataValidationArtifact:
 class DataTransformationArtifact:
     transformed_df_file_path: Path
     vectorize_file_path: Path
+    
+@dataclass 
+class ModelTrainerArtifact:
+    model_file_path: Path

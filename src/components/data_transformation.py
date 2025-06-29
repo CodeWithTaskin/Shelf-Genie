@@ -9,7 +9,7 @@ import joblib
 from pathlib import Path
 from src.logging import logging
 from src.exception import MyException
-from src.utils.main_utils import load_json, convert_to_pkl_file
+from src.utils.main_utils import load_json, convert_and_load_pkl_file
 from src.entity.artifact_entity import DataTransformationArtifact, DataValidationArtifact, DataIngestionArtifact
 from src.entity.config_entity import DataTransformationConfig
 
@@ -51,6 +51,16 @@ class DataTransformation:
         
         except Exception as e:
             raise MyException(e, sys) from e
+    
+    def top_books(self, df: pd.DataFrame) -> pd.DataFrame:
+        try:
+            books_that_more_then_250_num_reating = df[df['num_of_reating'] >= 250]
+            dropping_duplicates = books_that_more_then_250_num_reating.drop_duplicates(subset='ISBN')
+            dropping_duplicates = books_that_more_then_250_num_reating.drop_duplicates(subset='Book-Title')
+            top_books = dropping_duplicates.sort_values('avg_of_reating', ascending=False).head(52)
+            return top_books
+        except Exception as e:
+            raise MyException(e, sys) from e
         
     def data_transformation_initialize(self, report_file: DataValidationArtifact, ingested_file_path: DataIngestionArtifact, transformed_df_file_path: DataTransformationConfig, vectorize_file_path: DataTransformationConfig ) -> DataTransformationArtifact:
         try:
@@ -66,20 +76,24 @@ class DataTransformation:
                 )
                 logging.info('Successfully Vectorized....')
                 
-                logging.info('df to pkl started....')
+                logging.info('top books df to pkl started....')
                 df_pkl_file_path: Path = Path(transformed_df_file_path)
                 df_pkl_file_path.parent.mkdir(parents=True, exist_ok=True)
-                df_pkl: joblib = convert_to_pkl_file(
-                    file=df,
+                
+                top_books: pd.DataFrame = self.top_books(
+                    df=df
+                )
+                df_pkl: joblib = convert_and_load_pkl_file(
+                    file=top_books,
                     file_path=df_pkl_file_path
                 )
-                logging.info('df to pkl successfully executed....')
+                logging.info('top books df to pkl successfully executed....')
                 
                 logging.info('vector to pkl stated.....')
                 vectorize_pkl_file_path : Path = Path(vectorize_file_path)
                 vectorize_pkl_file_path.parent.mkdir(parents=True, exist_ok=True)
                 
-                vectorize_pkl: joblib = convert_to_pkl_file(
+                vectorize_pkl: joblib = convert_and_load_pkl_file(
                     file=vectorize_df,
                     file_path=vectorize_file_path
                 )

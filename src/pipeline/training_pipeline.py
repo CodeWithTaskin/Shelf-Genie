@@ -4,14 +4,17 @@ from src.logging import logging
 from src.components.data_ingestion import DataIngestion
 from src.components.data_validation import DataValidation
 from src.components.data_transformation import DataTransformation
+from src.components.model_trainer import ModelTrainer
 
 from src.entity.config_entity import (DataIngestionConfig,
                                       DataValidationConfig,
-                                      DataTransformationConfig)
+                                      DataTransformationConfig,
+                                      ModelTrainerConfig)
 
 from src.entity.artifact_entity import (DataIngestionArtifact,
                                         DataValidationArtifact,
-                                        DataTransformationArtifact)
+                                        DataTransformationArtifact,
+                                        ModelTrainerArtifact)
 
 
 class TrainPipeline:
@@ -19,6 +22,7 @@ class TrainPipeline:
         self.data_ingestion_config : DataIngestionConfig = DataIngestionConfig()
         self.data_validation_config : DataValidationConfig = DataValidationConfig()
         self.data_transformation_config: DataTransformationConfig = DataTransformationConfig()
+        self.model_trainer_config : ModelTrainerConfig = ModelTrainerConfig()
         
     def starting_data_ingestion(self):
         
@@ -55,6 +59,17 @@ class TrainPipeline:
         
         return data_transformation_artifact
     
+    def start_model_training(self, vectorizer_file_path: DataTransformationArtifact):
+        
+        model_trainer : ModelTrainer = ModelTrainer()
+        
+        model_trainer_artifact = model_trainer.model_trainer_initialize(
+            vectorizer_file_path=vectorizer_file_path,
+            model_file_path=self.model_trainer_config.model_file_name
+        )
+        
+        return model_trainer_artifact
+    
     
     def run_pipeline(self):
 
@@ -65,6 +80,10 @@ class TrainPipeline:
         start_data_transformation = self.start_data_transformation(
             data_ingestion_artifact=start_data_ingestion,
             data_validation_artifact=start_data_validation
+        )
+        
+        start_model_trainer = self.start_model_training(
+            vectorizer_file_path=start_data_transformation.vectorize_file_path
         )
 
         

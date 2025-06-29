@@ -17,10 +17,12 @@ def load_yaml_file(file_path: str)->None:
     except Exception as e:
         raise MyException(e, sys) from e
 
-def convert_to_pkl_file(file: object, file_path: Path)-> joblib:
+def convert_and_load_pkl_file(file_path: Path, file: object = None, statement : str = 'convert')-> joblib:
     try:
-        joblib.dump(file, open(file_path, 'wb'))
-        
+        if statement == 'convert':
+            joblib.dump(file, open(file_path, 'wb'))
+        elif statement == 'load':
+            return joblib.load(file_path)
     except Exception as e:
         raise MyException(e, sys) from e
     
