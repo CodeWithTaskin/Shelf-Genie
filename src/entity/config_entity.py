@@ -29,4 +29,4 @@ class DataTransformationConfig:
     data_transformed_folder_path: str = os.path.join(data_transformation_folder_path, TRANSFORMED_FOLDER_NAME)
     transformed_df_folder_path: str = os.path.join(data_transformation_folder_path, TRANSFORMED_DF_FOLDER_NAME)
     transformed_df_file_path: str = os.path.join(transformed_df_folder_path, TRANSFORMED_DF_FILE_NAME)
-    transformed_file_path: str = os.path.join(data_transformed_folder_path, TRANSFORMED_FILE_NAME)
+    vectorize_file_path: str = os.path.join(data_transformed_folder_path, TRANSFORMED_FILE_NAME)
