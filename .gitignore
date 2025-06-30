@@ -27,6 +27,7 @@ share/python-wheels/
 MANIFEST
 artefact/
 cradintials.txt
+practice.ipynb
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

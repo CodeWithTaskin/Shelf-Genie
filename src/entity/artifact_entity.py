@@ -17,3 +17,10 @@ class DataTransformationArtifact:
 @dataclass 
 class ModelTrainerArtifact:
     model_file_path: Path
+    
+@dataclass
+class ModelPusherArtifact:
+    ingested_file_path: Path
+    transformed_df_file_path: Path
+    vectorize_file_path: Path
+    model_file_path: Path

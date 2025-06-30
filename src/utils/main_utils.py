@@ -2,6 +2,7 @@ import sys
 import yaml
 import joblib
 import json
+import shutil
 from pathlib import Path
 
 
@@ -31,6 +32,15 @@ def load_json(file_path: object) -> json:
         with open(file_path, 'r') as file:
             config_data = json.load(file)
         return config_data
+    except Exception as e:
+        raise MyException(e, sys) from e
+    
+def zipper(output_folder_name: str, source_folder_path: Path, statement: str = 'zip'):
+    try:
+        if statement == 'zip':
+            shutil.make_archive(output_folder_name, 'zip', source_folder_path)
+        elif statement == 'unpack':
+            shutil.unpack_archive(source_folder_path, output_folder_name)
     except Exception as e:
         raise MyException(e, sys) from e
     

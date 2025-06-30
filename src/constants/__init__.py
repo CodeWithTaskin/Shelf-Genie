@@ -37,3 +37,9 @@ TRANSFORMATION_FOLDER_PATH: str = 'data_transformation'
 MODEL_TRAINER_FOLDER_PATH: str = 'model_trainer'
 MODEL_FOLDER_NAME: str = 'model'
 MODEL_FILE_NAME: str = 'model.pkl'
+
+# Model Pusher consents starts from AZURE_CONTAINER_NAME variable
+
+AZURE_CONTAINER_NAME: str = 'recosystemfile'
+ZIP_FILE_NAME: str = 'critical_file.zip'
+MODEL_PUSHER_FOLDER_NAME: str = 'model_pusher'

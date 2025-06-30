@@ -36,3 +36,8 @@ class ModelTrainerConfig:
     model_trainer_folder_path : str = os.path.join(pipeline_config.artifact_dir, MODEL_TRAINER_FOLDER_PATH)
     model_folder_path : str = os.path.join(model_trainer_folder_path, MODEL_FOLDER_NAME)
     model_file_name : str = os.path.join(model_folder_path, MODEL_FILE_NAME)
+    
+@dataclass
+class ModelPusherConfig:
+    model_pusher_folder_path : str = os.path.join(pipeline_config.artifact_dir, MODEL_PUSHER_FOLDER_NAME)
+    zip_file_name : str = os.path.join(model_pusher_folder_path, ZIP_FILE_NAME)

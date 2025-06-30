@@ -5,16 +5,19 @@ from src.components.data_ingestion import DataIngestion
 from src.components.data_validation import DataValidation
 from src.components.data_transformation import DataTransformation
 from src.components.model_trainer import ModelTrainer
+from src.components.model_pusher import ModelPusher
 
 from src.entity.config_entity import (DataIngestionConfig,
                                       DataValidationConfig,
                                       DataTransformationConfig,
-                                      ModelTrainerConfig)
+                                      ModelTrainerConfig,
+                                      ModelPusherConfig)
 
 from src.entity.artifact_entity import (DataIngestionArtifact,
                                         DataValidationArtifact,
                                         DataTransformationArtifact,
-                                        ModelTrainerArtifact)
+                                        ModelTrainerArtifact,
+                                        ModelPusherArtifact)
 
 
 class TrainPipeline:
@@ -23,6 +26,7 @@ class TrainPipeline:
         self.data_validation_config : DataValidationConfig = DataValidationConfig()
         self.data_transformation_config: DataTransformationConfig = DataTransformationConfig()
         self.model_trainer_config : ModelTrainerConfig = ModelTrainerConfig()
+        self.model_pusher_config : ModelPusherConfig = ModelPusherConfig()
         
     def starting_data_ingestion(self):
         
@@ -70,6 +74,19 @@ class TrainPipeline:
         
         return model_trainer_artifact
     
+    def start_model_pusher(self, ingested_file_path: DataIngestionArtifact, transformed_df_file_path: DataTransformationArtifact, vectorize_file_path: DataTransformationArtifact, model_file_path: ModelTrainerArtifact):
+        
+        model_pusher : ModelPusher = ModelPusher()
+        
+        model_pusher_artifact = model_pusher.model_pusher_initialize(
+            ingested_file_path=ingested_file_path,
+            transformed_df_file_path=transformed_df_file_path,
+            vectorize_file_path=vectorize_file_path,
+            model_file_path=model_file_path,
+            zip_file=self.model_pusher_config.zip_file_name
+        )
+    
+        return model_pusher_artifact
     
     def run_pipeline(self):
 
@@ -86,6 +103,12 @@ class TrainPipeline:
             vectorizer_file_path=start_data_transformation.vectorize_file_path
         )
 
+        start_model_pusher = self.start_model_pusher(
+            ingested_file_path=start_data_ingestion.ingested_file_path,
+            transformed_df_file_path=start_data_transformation.transformed_df_file_path,
+            vectorize_file_path=start_data_transformation.vectorize_file_path,
+            model_file_path=start_model_trainer.model_file_path
+        )
         
         
         

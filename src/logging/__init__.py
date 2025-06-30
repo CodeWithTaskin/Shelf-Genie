@@ -14,7 +14,7 @@ def configure_logger():
     Configures the root logger with a rotating file handler and console handler.
     Prevents duplicate handlers on re-imports.
     """
-    logger = logging.getLogger(__name__)  # Root logger
+    logger = logging.getLogger()  # ✅ Root logger to capture all logs
     logger.setLevel(logging.DEBUG)
 
     # Prevent duplicate logs
