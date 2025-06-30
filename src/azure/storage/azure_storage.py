@@ -1,11 +1,10 @@
 import os
 import sys
-
 from pathlib import Path
-from src.azure.configuration.azure_connection import AzureBlob
 
 from src.logging import logging
 from src.exception import MyException
+from src.azure.configuration.azure_connection import AzureBlob
 
 class AzureBlobStorage:
     def __init__(self):
