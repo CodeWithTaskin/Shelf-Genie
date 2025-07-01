@@ -24,17 +24,19 @@ class AzureBlobStorage:
         
     def is_exist(self, blob_file_name: str, container_name: str):
         try:
-            blob_client = self.blob_client.get_blob_client(container=container_name, blob=blob_file_name)
+            blob_client = self.blob_client.get_blob_client(blob=blob_file_name)
             if blob_client.exists():
                 logging.info(f"The blob '{blob_file_name}' exists in container '{container_name}'.")
+                return True
             else:
                 logging.info(f"The blob '{blob_file_name}' does NOT exist in container '{container_name}'.")
+                return False
         except Exception as e:
             raise MyException(e, sys) from e
     
-    def download(self, blob_file_name: str, container_name: str, download_file_path: Path):
+    def download(self, blob_file_name: str, download_file_path: Path):
         try:
-            blob_client = self.blob_client.get_blob_client(container=container_name, blob=blob_file_name)
+            blob_client = self.blob_client.get_blob_client(blob=blob_file_name)
 
             with open(download_file_path, "wb") as my_blob:
                 download_stream = blob_client.download_blob()

@@ -41,3 +41,7 @@ class ModelTrainerConfig:
 class ModelPusherConfig:
     model_pusher_folder_path : str = os.path.join(pipeline_config.artifact_dir, MODEL_PUSHER_FOLDER_NAME)
     zip_file_name : str = os.path.join(model_pusher_folder_path, ZIP_FILE_NAME)
+    
+@dataclass
+class RecommendationEngineConfig:
+    required_file_path: str = os.path.join(from_root(), RECOMMENDATION_ENGINE_REQUIRED_FOLDER_NAME)

@@ -43,3 +43,7 @@ MODEL_FILE_NAME: str = 'model.pkl'
 AZURE_CONTAINER_NAME: str = 'recosystemfile'
 ZIP_FILE_NAME: str = 'critical_file.zip'
 MODEL_PUSHER_FOLDER_NAME: str = 'model_pusher'
+
+# Recommendation Engine consents starts from RECOMMENDATION_ENGINE_REQUIRED_FOLDER_NAME variable
+
+RECOMMENDATION_ENGINE_REQUIRED_FOLDER_NAME: str = 'requirement_folder'
