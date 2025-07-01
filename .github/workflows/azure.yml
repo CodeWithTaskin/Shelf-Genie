@@ -1,7 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
-
-name: Python application
+name: Shelf-Genie Deployment on Azure
 
 on:
   push:
@@ -9,31 +6,63 @@ on:
   pull_request:
     branches: [ "main" ]
 
-permissions:
-  contents: read
-
 jobs:
-  build:
-
+  Build-and-Push-on-ACR:
     runs-on: ubuntu-latest
+    env:
+      AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+      MONGODB_URL: ${{ secrets.MONGODB_URL }}
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.10"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        pytest
+      - uses: actions/checkout@v4
+
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Install Requirements
+        run: |
+          pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+
+      - name: Run Pipeline
+        run: python demo.py
+
+      - name: Build and Push Docker Image on ACR
+        run: |
+          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api .
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
+
+  Deploy-on-Azure:
+    needs: Build-and-Push-on-ACR
+    runs-on: self-hosted  
+    env:
+      AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+      MONGODB_URL: ${{ secrets.MONGODB_URL }}
+
+    steps:
+      - name: Login to Azure Container Registry on VM
+        run: |
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+      - name: Set up SSH and Deploy
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.AZURE_HOST }}
+          username: ${{ secrets.AZURE_USERNAME }}
+          key: ${{ secrets.AZURE_KEY }}
+          script: |
+            echo "🛑 Stopping any existing container"
+            if [ "$(docker ps -q -f name=shelfgenie-api)" ]; then
+              docker stop shelfgenie-api
+              docker rm shelfgenie-api
+            fi
+
+            echo "⬇️ Pulling latest Docker image"
+            docker pull ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
+
+            echo "🚀 Starting new container"
+            docker run -d --name shelfgenie-api -p 5000:5000 -e AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
+

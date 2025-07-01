@@ -57,7 +57,7 @@ class DataTransformation:
             books_that_more_then_250_num_reating = df[df['num_of_reating'] >= 250]
             dropping_duplicates = books_that_more_then_250_num_reating.drop_duplicates(subset='ISBN')
             dropping_duplicates = books_that_more_then_250_num_reating.drop_duplicates(subset='Book-Title')
-            top_books = dropping_duplicates.sort_values('avg_of_reating', ascending=False).head(52)
+            top_books = dropping_duplicates.sort_values('avg_of_reating', ascending=False).head(102)
             return top_books
         except Exception as e:
             raise MyException(e, sys) from e
