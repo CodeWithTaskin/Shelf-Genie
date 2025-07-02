@@ -1,157 +1,156 @@
-const movieTitles = [
-  'The Dark Knight',
-  'Inception',
-  'Pulp Fiction',
-  'Forrest Gump',
-  'Interstellar',
-  'The Matrix',
-  'Gladiator',
-  'Titanic',
-  'Jurassic Park',
-  'Avatar',
-  'The Avengers',
-  'Star Wars',
-  'The Godfather',
-  'Fight Club',
-  'Goodfellas',
-  'Casablanca',
-  "Schindler's List",
-  'The Departed',
-  'Whiplash',
-  'Parasite',
-];
-
-// DOM elements
-const movieGrid = document.getElementById('movie-grid');
-const searchInput = document.getElementById('search-input');
-const loader = document.getElementById('loader');
-const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-const navLinks = document.getElementById('nav-links');
-
-let allMovies = [];
-let currentMovies = [];
-
-// Toggle mobile menu
-mobileMenuBtn.addEventListener('click', () => {
-  navLinks.classList.toggle('active');
-});
-
-// Generate movies with more details
-const generateMovies = () => {
-  loader.style.display = 'block';
-
-  // Simulate loading delay
-  setTimeout(() => {
-    allMovies = Array(52)
-      .fill()
-      .map((_, i) => {
-        const title =
-          movieTitles[Math.floor(Math.random() * movieTitles.length)];
-        const year = 1990 + Math.floor(Math.random() * 30);
-        const genre = ['Action', 'Drama', 'Comedy', 'Sci-Fi', 'Thriller'][
-          Math.floor(Math.random() * 5)
-        ];
-
-        return {
-          id: i + 1,
-          title: title,
-          year: year,
-          rating: ['PG-13', 'R', '18+'][Math.floor(Math.random() * 3)],
-          duration: `${Math.floor(Math.random() * 2) + 1}h ${Math.floor(
-            Math.random() * 60
-          )}m`,
-          genre: genre,
-          description: `A compelling story about adventure, friendship, and discovery. ${title} takes you on an unforgettable journey through amazing landscapes and emotional moments. Released in ${year}, this film has captivated audiences worldwide.`,
-          image: `https://picsum.photos/400/600?random=${
-            i + 100
-          }&blur=${Math.floor(Math.random() * 2)}`,
-          popularity: Math.floor(Math.random() * 100),
-        };
-      });
-
-    // Sort by popularity
-    allMovies.sort((a, b) => b.popularity - a.popularity);
-    currentMovies = [...allMovies];
-
-    renderMovies(currentMovies);
-    loader.style.display = 'none';
-  }, 1000);
-};
-
-// Movie card template
-const createMovieCard = movie => {
-  const card = document.createElement('div');
-  card.className = 'movie-card';
-  card.innerHTML = `
-        <img src="${movie.image}" alt="${movie.title}" class="movie-image">
-        <div class="movie-info">
-            <h3 class="movie-title">${movie.title}</h3>
-            <div class="movie-meta">
-                <span class="movie-year"><i class="far fa-calendar"></i> ${movie.year}</span>
-                <span class="movie-rating"><i class="fas fa-ticket"></i> ${movie.rating}</span>
-                <span class="movie-genre"><i class="fas fa-tag"></i> ${movie.genre}</span>
-            </div>
-        </div>
-    `;
-  card.addEventListener('click', () => {
-    window.location.href = `details.html?id=${movie.id}`;
-  });
-  return card;
-};
-
-// Render movies
-const renderMovies = movies => {
-  movieGrid.innerHTML = '';
-
-  if (movies.length === 0) {
-    movieGrid.innerHTML = `
-            <div class="no-results">
-                <i class="fas fa-film"></i>
-                <h3>No Books Found</h3>
-                <p>Try a different search term</p>
-            </div>
-        `;
-    return;
-  }
-
-  movies.forEach(movie => {
-    movieGrid.appendChild(createMovieCard(movie));
-  });
-};
-
-// Search functionality
-const handleSearch = searchTerm => {
-  if (searchTerm.length === 0) {
-    currentMovies = [...allMovies];
-    renderMovies(currentMovies);
-    return;
-  }
-
-  const filtered = allMovies.filter(
-    movie =>
-      movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      movie.year.toString().includes(searchTerm) ||
-      movie.genre.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  currentMovies = filtered;
-  renderMovies(currentMovies);
-};
-
-// Event listeners
 document.addEventListener('DOMContentLoaded', () => {
-  generateMovies();
+  const bookGrid = document.getElementById('movie-grid');
+  const searchInput = document.getElementById('search-input');
+  const loader = document.getElementById('loader');
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const navLinks = document.getElementById('nav-links');
 
-  searchInput.addEventListener('input', e => {
-    handleSearch(e.target.value.trim());
+  // Initialize loader
+  loader.style.display = 'flex';
+
+  let allBooks = [];
+  let currentBooks = [];
+
+  // Mobile menu toggle
+  mobileMenuBtn.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    mobileMenuBtn.setAttribute(
+      'aria-expanded',
+      navLinks.classList.contains('active')
+    );
   });
+
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', e => {
+    if (
+      !navLinks.contains(e.target) &&
+      !mobileMenuBtn.contains(e.target) &&
+      navLinks.classList.contains('active')
+    ) {
+      navLinks.classList.remove('active');
+      mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  // Fetch books with error handling
+  const fetchBooks = async () => {
+    try {
+      const res = await fetch('http://52.186.168.197:5000/');
+      if (!res.ok) throw new Error('Network response was not ok');
+
+      const data = await res.json();
+      const books = JSON.parse(data['Top-Books']);
+
+      allBooks = Object.entries(books).map(([key, book]) => ({
+        id: key,
+        title: book['Book-Title'],
+        author: book['Book-Author'],
+        year: book['Year-Of-Publication'],
+        publisher: book['Publisher'],
+        rating: book['avg_of_reating']?.toFixed(1) || 'N/A',
+        image: book['Image-URL-L'],
+        raw: book,
+      }));
+
+      currentBooks = [...allBooks];
+      renderBooks(currentBooks);
+    } catch (err) {
+      console.error('Error fetching books:', err);
+      bookGrid.innerHTML = `
+          <div class="no-results">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Failed to Load Books</h3>
+            <p>Please check your connection and try again</p>
+          </div>
+        `;
+    } finally {
+      loader.style.display = 'none';
+    }
+  };
+
+  // Create book card element
+  const createBookCard = book => {
+    const card = document.createElement('div');
+    card.className = 'movie-card';
+    card.innerHTML = `
+        <img src="${book.image}" alt="${book.title}" class="movie-image" loading="lazy">
+        <div class="movie-info">
+          <h3 class="movie-title">${book.title}</h3>
+          <div class="movie-meta">
+            <span><i class="far fa-calendar"></i> ${book.year}</span>
+            <span><i class="fas fa-star"></i> ${book.rating}</span>
+            <span><i class="fas fa-user"></i> ${book.author}</span>
+          </div>
+        </div>
+      `;
+
+    card.addEventListener('click', () => {
+      sessionStorage.setItem('selectedBook', JSON.stringify(book));
+      window.location.href = `details.html`;
+    });
+
+    return card;
+  };
+
+  // Render books to the grid
+  const renderBooks = books => {
+    bookGrid.innerHTML = '';
+
+    if (books.length === 0) {
+      bookGrid.innerHTML = `
+          <div class="no-results">
+            <i class="fas fa-book"></i>
+            <h3>No Books Found</h3>
+            <p>Try a different search term</p>
+          </div>
+        `;
+      return;
+    }
+
+    books.forEach(book => {
+      bookGrid.appendChild(createBookCard(book));
+    });
+  };
+
+  // Search function with debounce
+  let searchTimeout;
+  const handleSearch = searchTerm => {
+    clearTimeout(searchTimeout);
+
+    if (!searchTerm.trim()) {
+      currentBooks = [...allBooks];
+      renderBooks(currentBooks);
+      return;
+    }
+
+    loader.style.display = 'flex';
+
+    searchTimeout = setTimeout(() => {
+      const filtered = allBooks.filter(
+        book =>
+          book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          book.year.toString().includes(searchTerm)
+      );
+
+      currentBooks = filtered;
+      renderBooks(currentBooks);
+      loader.style.display = 'none';
+    }, 300);
+  };
 
   // Navbar scroll effect
   window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      document.querySelector('.navbar').classList.add('scrolled');
-    } else {
-      document.querySelector('.navbar').classList.remove('scrolled');
-    }
+    document
+      .querySelector('.navbar')
+      .classList.toggle('scrolled', window.scrollY > 50);
   });
+
+  // Event listeners
+  searchInput.addEventListener('input', e =>
+    handleSearch(e.target.value.trim())
+  );
+
+  // Initialize
+  fetchBooks();
 });

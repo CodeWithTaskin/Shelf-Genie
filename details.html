@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book details and recommendations">
+  <title>Book Details - ShelfGenie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/frontend/css/details.css">
+</head>
+<body>
+  <div class="movie-detail-container">
+    <button class="back-button" id="back-button" aria-label="Go back">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+
+    <div class="movie-header">
+      <div class="movie-poster">
+        <img id="detail-poster" alt="Book Cover" loading="lazy">
+      </div>
+
+      <div class="movie-info">
+        <h1 class="movie-title" id="movie-title"></h1>
+        <div class="movie-meta">
+          <span class="year" id="year"></span>
+          <span class="rating" id="rating"></span>
+          <span class="author" id="author"></span>
+        </div>
+        <p class="description" id="description"></p>
+
+        <div class="action-buttons">
+          <button class="play-button">
+            <i class="fas fa-book"></i> Read Sample
+          </button>
+          <button class="favorite-button">
+            <i class="far fa-heart"></i> Add to Favorites
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="recommendations">
+      <h2>Recommended for You</h2>
+      <div class="recommendation-grid" id="recommendations"></div>
+    </div>
+  </div>
+
+  <script src="/frontend/js/details.js" defer></script>
+</body>
+</html>
