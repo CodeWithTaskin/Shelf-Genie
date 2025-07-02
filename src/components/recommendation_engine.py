@@ -64,7 +64,7 @@ class RecommendationEngine:
             file_path=os.path.join(self.recommendation_engine_config.required_file_path, MODEL_FILE_NAME), statement='load'
         )
         index = np.where(pt_df.index == book_name)[0][0]
-        distance = sorted(list(enumerate(similarity[index])), key=lambda x:x[1], reverse=True)[1:6]
+        distance = sorted(list(enumerate(similarity[index])), key=lambda x:x[1], reverse=True)[1:21]
         for i in distance:
             recommended_books.append(pt_df.index[i[0]])
         return recommended_books
