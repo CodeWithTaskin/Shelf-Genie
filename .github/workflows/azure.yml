@@ -40,7 +40,6 @@ jobs:
     runs-on: self-hosted  # This runs directly on the Azure VM
     env:
       AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
-      MONGODB_URL: ${{ secrets.MONGODB_URL }}
 
     steps:
       - name: Login to Azure Container Registry on VM
