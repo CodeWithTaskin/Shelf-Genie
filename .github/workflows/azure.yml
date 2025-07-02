@@ -1,61 +1,61 @@
-name: Shelf-Genie Deployment on Azure
+# name: Shelf-Genie Deployment on Azure
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
 
-jobs:
-  Build-and-Push-on-ACR:
-    runs-on: ubuntu-latest
+# jobs:
+#   Build-and-Push-on-ACR:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: Login to Azure Container Registry
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+#       - name: Login to Azure Container Registry
+#         uses: azure/docker-login@v1
+#         with:
+#           login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+#           username: ${{ secrets.ACR_USERNAME }}
+#           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Install Requirements
-        run: |
-          pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+#       - name: Install Requirements
+#         run: |
+#           pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-      - name: Run Pipeline
-        run: python demo.py
-        env:
-          MONGODB_URL: ${{ secrets.MONGODB_URL }}
-          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+#       - name: Run Pipeline
+#         run: python demo.py
+#         env:
+#           MONGODB_URL: ${{ secrets.MONGODB_URL }}
+#           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
 
-      - name: Build and Push Docker Image on ACR
-        run: |
-          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api .
-          docker push ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
+#       - name: Build and Push Docker Image on ACR
+#         run: |
+#           docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api .
+#           docker push ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
 
-  Deploy-on-Azure:
-    needs: Build-and-Push-on-ACR
-    runs-on: self-hosted  # This runs directly on the Azure VM
-    env:
-      AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+#   Deploy-on-Azure:
+#     needs: Build-and-Push-on-ACR
+#     runs-on: self-hosted  # This runs directly on the Azure VM
+#     env:
+#       AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
 
-    steps:
-      - name: Login to Azure Container Registry on VM
-        run: |
-          echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
+#     steps:
+#       - name: Login to Azure Container Registry on VM
+#         run: |
+#           echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
-      - name: Stop and Remove Existing Container
-        run: |
-          if [ "$(docker ps -q -f name=shelfgenie-api)" ]; then
-            echo "Stopping and removing existing container"
-            docker stop shelfgenie-api
-            docker rm shelfgenie-api
-          fi
+#       - name: Stop and Remove Existing Container
+#         run: |
+#           if [ "$(docker ps -q -f name=shelfgenie-api)" ]; then
+#             echo "Stopping and removing existing container"
+#             docker stop shelfgenie-api
+#             docker rm shelfgenie-api
+#           fi
 
-      - name: Pull and Run New Container
-        run: |
-          docker pull ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
-          docker run -d --name shelfgenie-api -p 5000:5000 -e AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
+#       - name: Pull and Run New Container
+#         run: |
+#           docker pull ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
+#           docker run -d --name shelfgenie-api -p 5000:5000 -e AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
 
