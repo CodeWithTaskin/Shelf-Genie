@@ -9,9 +9,6 @@ on:
 jobs:
   Build-and-Push-on-ACR:
     runs-on: ubuntu-latest
-    env:
-      AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
-      MONGODB_URL: ${{ secrets.MONGODB_URL }}
 
     steps:
       - uses: actions/checkout@v4
@@ -33,7 +30,7 @@ jobs:
       - name: Run Pipeline
         run: python demo.py
         env:
-          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          MONGODB_URL: ${{ vars.MONGODB_URL }}
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
 
       - name: Build and Push Docker Image on ACR
