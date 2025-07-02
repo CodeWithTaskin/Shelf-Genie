@@ -1,7 +1,7 @@
 import os
 
 mongo_url = os.getenv("MONGODB_URL")
-if not mongo_url:
-    print("❌ MONGODB_URL is empty or not set")
+if mongo_url and mongo_url.startswith("mongodb+srv"):
+    print("✅ MongoDB URI is valid and starts with 'mongodb'")
 else:
-    print("✅ MONGODB_URL:", mongo_url)
+    print("❌ MongoDB URI is missing or invalid")
