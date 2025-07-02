@@ -23,14 +23,11 @@ jobs:
       - name: Install Requirements
         run: |
           pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
-      
-      - name: Check ENV in Python
-        run: python check_env.py
 
       - name: Run Pipeline
         run: python demo.py
         env:
-          MONGODB_URL: ${{ vars.MONGODB_URL }}
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
 
       - name: Build and Push Docker Image on ACR
@@ -59,7 +56,6 @@ jobs:
 
       - name: Pull and Run New Container
         run: |
-          export AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
           docker pull ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
           docker run -d --name shelfgenie-api -p 5000:5000 -e AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
 
