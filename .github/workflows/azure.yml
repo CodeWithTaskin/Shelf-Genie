@@ -31,7 +31,10 @@ jobs:
         run: python check_env.py
 
       - name: Run Pipeline
-        run: python demo.py
+        run: |
+          export MONGODB_URL="${{ secrets.MONGODB_URL }}"
+          export AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+          python demo.py
 
       - name: Build and Push Docker Image on ACR
         run: |
@@ -59,6 +62,7 @@ jobs:
 
       - name: Pull and Run New Container
         run: |
+          export AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
           docker pull ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
           docker run -d --name shelfgenie-api -p 5000:5000 -e AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
 
