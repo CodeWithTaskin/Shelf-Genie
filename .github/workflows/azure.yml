@@ -22,12 +22,13 @@ jobs:
           login-server: ${{ secrets.ACR_LOGIN_SERVER }}
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-      - name: Check ENV in Python
-        run: python check_env.py
 
       - name: Install Requirements
         run: |
           pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
+      
+      - name: Check ENV in Python
+        run: python check_env.py
 
       - name: Run Pipeline
         run: python demo.py
