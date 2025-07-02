@@ -32,8 +32,8 @@ jobs:
 
       - name: Run Pipeline
         run: |
-          export MONGODB_URL="${{ secrets.MONGODB_URL }}"
-          export AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}"
+          export MONGODB_URL="${{ env.MONGODB_URL }}"
+          export AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }}"
           python demo.py
 
       - name: Build and Push Docker Image on ACR
