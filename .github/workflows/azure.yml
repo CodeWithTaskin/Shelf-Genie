@@ -37,7 +37,7 @@ jobs:
 
   Deploy-on-Azure:
     needs: Build-and-Push-on-ACR
-    runs-on: self-hosted  
+    runs-on: self-hosted  # This runs directly on the Azure VM
     env:
       AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
       MONGODB_URL: ${{ secrets.MONGODB_URL }}
@@ -47,22 +47,16 @@ jobs:
         run: |
           echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
-      - name: Set up SSH and Deploy
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.AZURE_HOST }}
-          username: ${{ secrets.AZURE_USERNAME }}
-          key: ${{ secrets.AZURE_KEY }}
-          script: |
-            echo "🛑 Stopping any existing container"
-            if [ "$(docker ps -q -f name=shelfgenie-api)" ]; then
-              docker stop shelfgenie-api
-              docker rm shelfgenie-api
-            fi
+      - name: Stop and Remove Existing Container
+        run: |
+          if [ "$(docker ps -q -f name=shelfgenie-api)" ]; then
+            echo "Stopping and removing existing container"
+            docker stop shelfgenie-api
+            docker rm shelfgenie-api
+          fi
 
-            echo "⬇️ Pulling latest Docker image"
-            docker pull ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
-
-            echo "🚀 Starting new container"
-            docker run -d --name shelfgenie-api -p 5000:5000 -e AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
+      - name: Pull and Run New Container
+        run: |
+          docker pull ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
+          docker run -d --name shelfgenie-api -p 5000:5000 -e AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
 
