@@ -31,10 +31,10 @@ jobs:
         run: python check_env.py
 
       - name: Run Pipeline
-        run: |
-          export MONGODB_URL="${{ env.MONGODB_URL }}"
-          export AZURE_STORAGE_CONNECTION_STRING="${{ env.AZURE_STORAGE_CONNECTION_STRING }}"
-          python demo.py
+        run: python demo.py
+        env:
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
 
       - name: Build and Push Docker Image on ACR
         run: |
