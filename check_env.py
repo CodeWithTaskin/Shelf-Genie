@@ -1,3 +1,7 @@
 import os
-from src.logging import logging
-logging.info(f"MONGODB_URL from Python: {os.getenv("MONGODB_URL")}")
+
+mongo_url = os.getenv("MONGODB_URL")
+if not mongo_url:
+    print("❌ MONGODB_URL is empty or not set")
+else:
+    print("✅ MONGODB_URL:", mongo_url)
