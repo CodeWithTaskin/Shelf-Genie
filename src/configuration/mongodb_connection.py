@@ -12,6 +12,7 @@ class MongoDBConnection:
     def __init__(self, db_name: str, collection_name: str, connection_url: str):
         try:
             logging.info('Connecting with MongoDB....')
+            print("MongoDB URL:", connection_url)
             self.client = MongoClient(connection_url)
             
             status = self.client.admin.command('ping')
