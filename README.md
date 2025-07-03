@@ -1,6 +1,6 @@
 # Book Recommendation System for International Remote Jobs 🚀
 
-![Project Banner](https://placehold.co/1200x400/2d2b55/FFFFFF?text=Book+Recommendation+System+MLOps+Platform)  
+![Project Banner](https://github.com/CodeWithTaskin/Shelf-Genie/blob/adf0ce0ea36ddb472e7cb056f3e1b507d6590050/asset/Screenshot%202025-07-02%20083605.png)  
 
 
 ## 🌟 Overview
@@ -11,11 +11,11 @@ A production-grade MLOps platform that recommends books for landing internationa
 - End-to-end CI/CD automation with GitHub Actions
 - Cloud-native architecture on Azure and Cloudflare
 
-[![Live Demo](https://img.shields.io/badge/Demo-Live%20Site-brightgreen)](https://your-demo-link.com)
-[![API Status](https://img.shields.io/badge/API-Hosted%20on%20Render-blue)](https://your-api-link.com)
+[![Live Demo](https://img.shields.io/badge/Demo-Live%20Site-brightgreen)](https://shelf-genie.pages.dev/)
+[![API Status](https://img.shields.io/badge/API-Hosted%20on%20Render-blue)]()
 
 ## 🎥 Demo Video
-[![Demo Video](https://placehold.co/800x450/1a1835/FFFFFF?text=Click+to+Watch+Project+Demo)](https://your-video-link.com)  
+https://github.com/user-attachments/assets/1b29db95-847f-4a57-a245-cc7f741eed8a 
 
 
 ## ✨ Features
@@ -120,8 +120,8 @@ GitHub Actions · Azure ACR · Azure VM · Azure Blob Storage
 ### Local Setup
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/book-recommendation-system.git
-cd book-recommendation-system
+git clone https://github.com/CodeWithTaskin/Shelf-Genie.git
+cd Shelf-Genie
 
 # Install dependencies
 pip install -r requirements.txt
@@ -131,19 +131,17 @@ export MONGODB_URL="your_mongodb_connection_string"
 export AZURE_STORAGE_CONNECTION_STRING="your_azure_connection_string"
 
 # Run Flask backend
-python app/main.py
+python app.py
 
 # Launch frontend
-cd frontend
-npm install
-npm start
+index.html
 ```
 
 ## 🔧 Deployment
 ### CI/CD Pipeline
 ```mermaid
 graph LR
-A[GitHub Push] --> B[Run Tests]
+A[GitHub Push] --> B[Run Pipeline]
 B --> C[Build Docker Image]
 C --> D[Push to Azure ACR]
 D --> E[Deploy to Azure VM]
@@ -178,7 +176,7 @@ E --> F[Update Cloudflare Frontend]
 ## 📂 Project Structure
 ```bash
 ├── .github/workflows       # CI/CD pipelines
-├── data_pipeline           # ETL components
+├── src/components          # ETL components
 │   ├── ingestion.py
 │   ├── validation.py
 │   └── transformation.py
@@ -208,133 +206,69 @@ E --> F[Update Cloudflare Frontend]
 
 ## 🔄 CI/CD Workflow
 ```yaml
-name: Production Deployment
+name: Shelf-Genie Deployment on Azure
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  build-deploy:
+  Build-and-Push-on-ACR:
     runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-    - name: Build Docker image
-      run: docker build -t book-recommender:${{ github.sha }} .
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
 
-    - name: Push to Azure ACR
-      run: |
-        docker login ${{ secrets.ACR_LOGIN_SERVER }} \
-          -u ${{ secrets.ACR_USERNAME }} \
-          -p ${{ secrets.ACR_PASSWORD }}
-        docker push ${{ secrets.ACR_LOGIN_SERVER }}/book-recommender:${{ github.sha }}
+      - name: Install Requirements
+        run: |
+          pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
-    - name: Deploy to Azure VM
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.AZURE_VM_IP }}
-        username: azureuser
-        key: ${{ secrets.AZURE_SSH_KEY }}
-        script: |
-          docker pull ${{ secrets.ACR_LOGIN_SERVER }}/book-recommender:${{ github.sha }}
-          docker stop book-app || true
-          docker run -d --rm -p 5000:5000 \
-            -e MONGODB_URL=$MONGODB_URL \
-            -e AZURE_STORAGE_CONNECTION_STRING=$AZURE_STORAGE_CONNECTION_STRING \
-            --name book-app ${{ secrets.ACR_LOGIN_SERVER }}/book-recommender:${{ github.sha }}
+      - name: Run Pipeline
+        run: python demo.py
+        env:
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+
+      - name: Build and Push Docker Image on ACR
+        run: |
+          docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api .
+          docker push ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
+
+  Deploy-on-Azure:
+    needs: Build-and-Push-on-ACR
+    runs-on: self-hosted  # This runs directly on the Azure VM
+    env:
+      AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+
+    steps:
+      - name: Login to Azure Container Registry on VM
+        run: |
+          echo "${{ secrets.ACR_PASSWORD }}" | docker login ${{ secrets.ACR_LOGIN_SERVER }} -u ${{ secrets.ACR_USERNAME }} --password-stdin
+
+      - name: Stop and Remove Existing Container
+        run: |
+          if [ "$(docker ps -q -f name=shelfgenie-api)" ]; then
+            echo "Stopping and removing existing container"
+            docker stop shelfgenie-api
+            docker rm shelfgenie-api
+          fi
+
+      - name: Pull and Run New Container
+        run: |
+          docker pull ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
+          docker run -d --name shelfgenie-api -p 5000:5000 -e AZURE_STORAGE_CONNECTION_STRING="${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" ${{ secrets.ACR_LOGIN_SERVER }}/recommendation-system-api
+
+
 ```
 
 ## 📄 License
-Distributed under the MIT License. See `LICENSE` for more information.
-
-## 📧 Contact
-[Your Name] - [your.email@example.com]  
-Project Link: [https://github.com/yourusername/book-recommendation-system](https://github.com/yourusername/book-recommendation-system)
-
-
-
-```mermaid
-graph TD
-    A[User] -->|HTTPS| B(Cloudflare Frontend)
-    B -->|API Calls| C[Azure VM: Flask App]
-    C -->|CRUD Operations| D[(MongoDB Atlas)]
-    C -->|Model Storage| E[Azure Blob Storage]
-    F[GitHub Actions] -->|CI/CD Pipeline| G[Azure Container Registry]
-    G -->|Image Pull| C
-    H[Azure Entra ID] -->|Authentication| C
-    I[Developer] -->|Code Push| F
-
-    style A fill:#4b8bbe,color:white
-    style B fill:#f38020,color:black
-    style C fill:#007fff,color:white
-    style D fill:#13aa52,color:white
-    style E fill:#007fff,color:white
-    style F fill:#181717,color:white
-    style G fill:#007fff,color:white
-    style H fill:#007fff,color:white
-    style I fill:#f34f29,color:white
-```
-
-
-
-### ☁️ Infrastructure Architecture
-**End-to-End Cloud Implementation with Azure Services:**
-
-```mermaid
-graph LR
-    User[User Browser] --> Cloudflare[Cloudflare Pages<br>Frontend Hosting]
-    Cloudflare --> AzureVM[Azure Virtual Machine<br>Flask API on Docker]
-    AzureVM --> MongoDB[(MongoDB Atlas<br>Book Metadata)]
-    AzureVM --> Blob[Azure Blob Storage<br>Models & Datasets]
-    GitHub[GitHub Actions CI/CD] --> ACR[Azure Container Registry<br>Docker Images]
-    ACR --> AzureVM
-    Entra[Azure Entra ID<br>User Auth] --> AzureVM
-```
-
-**Data Flow:**
-1. User accesses Cloudflare-hosted frontend
-2. Frontend makes API calls to Flask app on Azure VM (Port 5000)
-3. Flask app retrieves:
-   - Book metadata from MongoDB
-   - ML models from Blob Storage
-   - User credentials via Entra ID
-4. Recommendation engine processes similarity matrix
-5. Results returned through API to frontend
-
-**Security Components:**
-- 🔒 Azure Entra ID for authentication
-- 🔑 SSH Key access to Azure VM
-- 🔐 Secrets management via GitHub Secrets
-- 🛡️ Cloudflare DDoS protection
-- 🔍 Port filtering (22, 80, 5000 only)
-
-**Network Configuration:**
-```bash
-az vm open-port \
-    --resource-group myResourceGroup \
-    --name myVM \
-    --port 5000 \
-    --priority 1001
-```
-
-## Suggested Improvements
-1. Add **Azure Application Gateway** for SSL termination and WAF protection
-2. Implement **Azure Monitor** for performance tracking
-3. Use **Azure Key Vault** for secret management
-4. Add **Redis Cache** on Azure for API response caching
-5. Implement **Load Balancer** for horizontal scaling
-
-## Cost Optimization Tips
-- Use **Azure Spot VMs** for development environments
-- Enable **Blob Storage Tiering** (Hot/Cool/Archive)
-- Configure **Auto-shutdown** for non-production VMs
-- Use **MongoDB Atlas M0** free tier for development
-
-Would you like me to provide:
-1. Detailed security configuration guide for Azure Entra ID
-2. Sample Azure CLI commands for infrastructure setup
-3. Cost estimation breakdown for the architecture
-4. Alternative architecture using Azure Kubernetes Service (AKS)?
-
+Distributed under the LGPL License. See `LICENSE` for more information.
