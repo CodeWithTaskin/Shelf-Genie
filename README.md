@@ -1,140 +1,340 @@
-# 📚 ShelfGenie – A Production-Grade Book Recommendation System
+# Book Recommendation System for International Remote Jobs 🚀
 
-> **An end-to-end MLOps web application built entirely from scratch – designed to showcase real-world engineering, not just machine learning.**
+![Project Banner](https://placehold.co/1200x400/2d2b55/FFFFFF?text=Book+Recommendation+System+MLOps+Platform)  
 
----
 
-<video src="assets/Recording 2025-07-01 170243.mp4" width="640" height="480" controls></video>
+## 🌟 Overview
+A production-grade MLOps platform that recommends books for landing international remote jobs. Features include:
+- Top 100 books displayed on landing page
+- Interactive book exploration with recursive recommendations
+- Enterprise-grade MLOps pipeline built from scratch
+- End-to-end CI/CD automation with GitHub Actions
+- Cloud-native architecture on Azure and Cloudflare
 
----
+[![Live Demo](https://img.shields.io/badge/Demo-Live%20Site-brightgreen)](https://your-demo-link.com)
+[![API Status](https://img.shields.io/badge/API-Hosted%20on%20Render-blue)](https://your-api-link.com)
 
-## 🚀 Project Overview
+## 🎥 Demo Video
+[![Demo Video](https://placehold.co/800x450/1a1835/FFFFFF?text=Click+to+Watch+Project+Demo)](https://your-video-link.com)  
 
-**ShelfGenie** isn’t just a machine learning model in a Jupyter notebook.  
-It’s a full-stack, production-ready **MLOps ecosystem** designed to demonstrate real-world deployment, system architecture, and scalability.  
 
-With a modern frontend, dynamic book recommendations, and an enterprise-level pipeline deployed on Azure, this app is the kind of portfolio project that doesn't just *talk* — it *ships*.
+## ✨ Features
+### Core Functionality
+- **Recursive Recommendations**: Click any book → view details + 20 similar books → repeat endlessly
+- **Modern UI**: Clean animations and responsive design
+- **Personalized Suggestions**: ML-powered recommendation engine
 
----
+### MLOps Pipeline
+| Component          | Technology          | Description                     |
+|--------------------|---------------------|---------------------------------|
+| **Data Ingestion** | Custom Python       | Raw data collection             |
+| **Validation**     | Custom Rules Engine | Data quality checks             |
+| **Transformation** | Pandas/Numpy        | Feature engineering             |
+| **Model Training** | Scikit-Learn        | Custom similarity algorithm     |
+| **Model Serving**  | Flask + Docker      | REST API endpoint               |
+| **Monitoring**     | Custom Logging      | Performance tracking            |
 
-## ✨ Features & Highlights
+### ☁️ Infrastructure Architecture
+```mermaid
+graph TD
+    A[User] -->|HTTPS| B(Cloudflare Frontend)
+    B -->|API Calls| C[Azure VM: Flask App]
+    C -->|CRUD Operations| D[(MongoDB Atlas)]
+    C -->|Model Storage| E[Azure Blob Storage]
+    F[GitHub Actions] -->|CI/CD Pipeline| G[Azure Container Registry]
+    G -->|Image Pull| C
+    H[Azure Entra ID] -->|Authentication| C
+    I[Developer] -->|Code Push| F
 
-- 🔍 **Top 100 Books on Landing Page**
-- 📖 **Book Detail Page** with metadata and recommendation context
-- 🔁 **Dynamic Recommendation Engine**: Suggests 20 similar books per selection — with recursive exploration
-- 🔧 **Built Entirely from Scratch** – No prebuilt libraries or tools like DVC
-- 🧱 **Modular, Scalable Architecture** following MLOps best practices
-- 🧪 **End-to-End ML Pipeline** with:
-  - Data Ingestion
-  - Data Validation
-  - Data Transformation
-  - Model Training
-  - Model Deployment (Dockerized)
-- ☁️ **Cloud-Native Deployment on Azure**
-- ⚙️ **CI/CD Automation** using GitHub Actions
-- 🧪 **Multi-Stage Docker** for optimized image size
-- 🧠 **MongoDB Integration** for tracking interactions
-- 🎨 **Clean, Animated, Responsive Frontend** hosted on Cloudflare
-- 🌐 **API-first Architecture** using Flask, integrated with the frontend
+    style A fill:#4b8bbe,color:white
+    style B fill:#f38020,color:black
+    style C fill:#007fff,color:white
+    style D fill:#13aa52,color:white
+    style E fill:#007fff,color:white
+    style F fill:#181717,color:white
+    style G fill:#007fff,color:white
+    style H fill:#007fff,color:white
+    style I fill:#f34f29,color:white
+```
 
----
+**End-to-End Cloud Implementation with Azure Services:**
 
-## 🧰 Tech Stack
+```mermaid
+graph LR
+    User[User Browser] --> Cloudflare[Cloudflare Pages<br>Frontend Hosting]
+    Cloudflare --> AzureVM[Azure Virtual Machine<br>Flask API on Docker]
+    AzureVM --> MongoDB[(MongoDB Atlas<br>Book Metadata)]
+    AzureVM --> Blob[Azure Blob Storage<br>Models & Datasets]
+    GitHub[GitHub Actions CI/CD] --> ACR[Azure Container Registry<br>Docker Images]
+    ACR --> AzureVM
+    Entra[Azure Entra ID<br>User Auth] --> AzureVM
+```
 
-| Category            | Technologies Used                                     |
-|---------------------|--------------------------------------------------------|
-| **Frontend**        | HTML/CSS, JavaScript, Animated UI, Cloudflare Pages    |
-| **Backend**         | Python, Flask (REST API), MongoDB                     |
-| **MLOps**           | Custom ML pipeline, Modular Design, Azure DevOps       |
-| **Cloud & DevOps**  | Azure VM, Azure Blob Storage, Azure ACR, GitHub Actions |
-| **Containerization**| Docker, Multi-Stage Build                              |
-| **CI/CD**           | GitHub Actions                                         |
-| **Hosting**         | Flask API on Render (Demo), Frontend on Cloudflare     |
+**Data Flow:**
+1. User accesses Cloudflare-hosted frontend
+2. Frontend makes API calls to Flask app on Azure VM (Port 5000)
+3. Flask app retrieves:
+   - Book metadata from MongoDB
+   - ML models from Blob Storage
+   - User credentials via Entra ID
+4. Recommendation engine processes similarity matrix
+5. Results returned through API to frontend
 
----
+**Security Components:**
+- 🔒 Azure Entra ID for authentication
+- 🔑 SSH Key access to Azure VM
+- 🔐 Secrets management via GitHub Secrets
+- 🛡️ Cloudflare DDoS protection
+- 🔍 Port filtering (22, 80, 5000 only)
 
-## 🛠️ Installation & Usage
-
-> Clone the repo and run locally using Docker or access the hosted demo (link below).
-
-### 🔄 Clone & Run
-
+**Network Configuration:**
 ```bash
-git clone https://github.com/your-username/shelfgenie.git
-cd shelfgenie
-docker build -t shelfgenie-app .
-docker run -p 8000:8000 shelfgenie-app
-````
-
-Visit: [http://localhost:8000](http://localhost:5000)
-
-> 💡 You’ll need valid Azure credentials set in your environment variables or `.env` file for full cloud interaction.
-
----
-
-## 🧪 API & Architecture Overview
-
-**Core Components:**
-
-```
-📦 src/
-├── data_ingestion/
-├── data_validation/
-├── data_transformation/
-├── model_training/
-├── model_pusher/
-├── api/                  → Flask-based REST API
-├── azure/                → Blob Storage, ACR, VM integration
-└── cicd/                 → GitHub Actions workflow
+az vm open-port \
+    --resource-group myResourceGroup \
+    --name myVM \
+    --port 5000 \
+    --priority 1001
 ```
 
-* **Frontend** communicates with Flask backend via clean API endpoints.
-* **Backend** serves model predictions, recommendations, and metadata via RESTful APIs.
-* **CI/CD** automates build/test/deploy across Azure services using GitHub Actions.
+## 🛠️ Technologies
+**Backend**
+```plaintext
+Python · Flask · MongoDB · Docker · Azure ML
+```
+**Frontend**
+```plaintext
+React · Tailwind CSS · Framer Motion · Cloudflare
+```
+**DevOps**
+```plaintext
+GitHub Actions · Azure ACR · Azure VM · Azure Blob Storage
+```
 
----
+## 🚀 Installation
+### Prerequisites
+- Python 3.13+
+- Docker
+- MongoDB Atlas account
+- Azure account
 
-## 🌍 Live Demo (Optional)
+### Local Setup
+```bash
+# Clone repository
+git clone https://github.com/yourusername/book-recommendation-system.git
+cd book-recommendation-system
 
-> 🔗 **Frontend**: [https://shelfgenie.pages.dev](https://shelf-genie.pages.dev)
-> 🔗 **API (Render)**: [https://api-recommendation-system.onrender.com](https://api-recommendation-system.onrender.com)
+# Install dependencies
+pip install -r requirements.txt
 
----
+# Set environment variables
+export MONGODB_URL="your_mongodb_connection_string"
+export AZURE_STORAGE_CONNECTION_STRING="your_azure_connection_string"
 
-## 🤝 Contributing
+# Run Flask backend
+python app/main.py
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change or improve.
+# Launch frontend
+cd frontend
+npm install
+npm start
+```
 
----
+## 🔧 Deployment
+### CI/CD Pipeline
+```mermaid
+graph LR
+A[GitHub Push] --> B[Run Tests]
+B --> C[Build Docker Image]
+C --> D[Push to Azure ACR]
+D --> E[Deploy to Azure VM]
+E --> F[Update Cloudflare Frontend]
+```
 
-## 🪪 License
+### Infrastructure Setup
+1. **Azure Configuration**
+   - Create Blob Storage container
+   - Set up Azure VM with Docker runtime
+   - Configure Azure ACR repository
 
-Distributed under the **LGNU License**. See `LICENSE` for more information.
+2. **Security Setup**
+   ```bash
+   # Create Entra ID service principal
+   az ad sp create-for-rbac --name "book-recommender"
+   
+   # Configure VM access
+   az vm user update --resource-group myResourceGroup \
+   --name myVM --username azureuser --ssh-key-value ~/.ssh/id_rsa.pub
+   ```
 
----
+3. **GitHub Secrets**
+   ```plaintext
+   ACR_LOGIN_SERVER    = <your_acr_login_server>
+   ACR_USERNAME        = <service_principal_appid>
+   ACR_PASSWORD        = <service_principal_password>
+   AZURE_STORAGE_CONNECTION_STRING = <connection_string>
+   MONGODB_URL         = <mongodb_connection_string>
+   ```
 
-## 👤 About Me – Farjhan Ahmed
+## 📂 Project Structure
+```bash
+├── .github/workflows       # CI/CD pipelines
+├── data_pipeline           # ETL components
+│   ├── ingestion.py
+│   ├── validation.py
+│   └── transformation.py
+├── model                   # ML components
+│   ├── training.py
+│   └── pusher.py
+├── app                     # Flask backend
+│   ├── main.py             # API endpoints
+│   └── Dockerfile          # Multi-stage build
+├── frontend                # React application
+│   ├── public
+│   └── src
+│       ├── components      # UI components
+│       └── services        # API integration
+└── infrastructure          # Deployment scripts
+    ├── azure-deploy.sh
+    └── cloudflare-setup.md
+```
 
-I'm a passionate Machine Learning Engineer focused on building production-level MLOps solutions with real-world architecture, cloud-native design, and full-stack integration.
+## 🔐 Environment Variables
+| Variable                          | Description                     | Required |
+|-----------------------------------|---------------------------------|----------|
+| `MONGODB_URL`                     | MongoDB connection string       | Yes      |
+| `AZURE_STORAGE_CONNECTION_STRING` | Azure Blob Storage connection   | Yes      |
+| `ACR_LOGIN_SERVER`                | Azure Container Registry URL    | Prod     |
+| `FLASK_ENV`                       | Development/production mode     | No       |
 
-> 🧠 I don’t just build models. I build systems.
-> 💼 I’m actively looking for remote opportunities where I can bring this level of depth and execution to your team.
-> 🤝 Open to collaboration, contract roles, or full-time ML/MLOps engineering work.
+## 🔄 CI/CD Workflow
+```yaml
+name: Production Deployment
 
-📫 **Connect with me**:
+on:
+  push:
+    branches: [ main ]
 
-* LinkedIn: [linkedin.com/in/farjhan](https://linkedin.com/in/farjhan)
-* Email: [farjhan.dev@gmail.com](mailto:farjhan.dev@gmail.com)
-* Portfolio Website: *Coming soon*
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
 
----
+    - name: Build Docker image
+      run: docker build -t book-recommender:${{ github.sha }} .
 
-## 🧠 Why This Project Matters
+    - name: Push to Azure ACR
+      run: |
+        docker login ${{ secrets.ACR_LOGIN_SERVER }} \
+          -u ${{ secrets.ACR_USERNAME }} \
+          -p ${{ secrets.ACR_PASSWORD }}
+        docker push ${{ secrets.ACR_LOGIN_SERVER }}/book-recommender:${{ github.sha }}
 
-Recruiters, if you're reading this:
+    - name: Deploy to Azure VM
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.AZURE_VM_IP }}
+        username: azureuser
+        key: ${{ secrets.AZURE_SSH_KEY }}
+        script: |
+          docker pull ${{ secrets.ACR_LOGIN_SERVER }}/book-recommender:${{ github.sha }}
+          docker stop book-app || true
+          docker run -d --rm -p 5000:5000 \
+            -e MONGODB_URL=$MONGODB_URL \
+            -e AZURE_STORAGE_CONNECTION_STRING=$AZURE_STORAGE_CONNECTION_STRING \
+            --name book-app ${{ secrets.ACR_LOGIN_SERVER }}/book-recommender:${{ github.sha }}
+```
 
-> This isn't another Kaggle clone. This is a **production-grade, cloud-deployed, CI/CD-enabled**, API-integrated **machine learning product** — built solo, from scratch.
+## 📄 License
+Distributed under the MIT License. See `LICENSE` for more information.
 
-If you're looking for engineers who don’t just know ML, but understand how to deploy, scale, and integrate it — let’s talk.
+## 📧 Contact
+[Your Name] - [your.email@example.com]  
+Project Link: [https://github.com/yourusername/book-recommendation-system](https://github.com/yourusername/book-recommendation-system)
 
----
+
+
+```mermaid
+graph TD
+    A[User] -->|HTTPS| B(Cloudflare Frontend)
+    B -->|API Calls| C[Azure VM: Flask App]
+    C -->|CRUD Operations| D[(MongoDB Atlas)]
+    C -->|Model Storage| E[Azure Blob Storage]
+    F[GitHub Actions] -->|CI/CD Pipeline| G[Azure Container Registry]
+    G -->|Image Pull| C
+    H[Azure Entra ID] -->|Authentication| C
+    I[Developer] -->|Code Push| F
+
+    style A fill:#4b8bbe,color:white
+    style B fill:#f38020,color:black
+    style C fill:#007fff,color:white
+    style D fill:#13aa52,color:white
+    style E fill:#007fff,color:white
+    style F fill:#181717,color:white
+    style G fill:#007fff,color:white
+    style H fill:#007fff,color:white
+    style I fill:#f34f29,color:white
+```
+
+
+
+### ☁️ Infrastructure Architecture
+**End-to-End Cloud Implementation with Azure Services:**
+
+```mermaid
+graph LR
+    User[User Browser] --> Cloudflare[Cloudflare Pages<br>Frontend Hosting]
+    Cloudflare --> AzureVM[Azure Virtual Machine<br>Flask API on Docker]
+    AzureVM --> MongoDB[(MongoDB Atlas<br>Book Metadata)]
+    AzureVM --> Blob[Azure Blob Storage<br>Models & Datasets]
+    GitHub[GitHub Actions CI/CD] --> ACR[Azure Container Registry<br>Docker Images]
+    ACR --> AzureVM
+    Entra[Azure Entra ID<br>User Auth] --> AzureVM
+```
+
+**Data Flow:**
+1. User accesses Cloudflare-hosted frontend
+2. Frontend makes API calls to Flask app on Azure VM (Port 5000)
+3. Flask app retrieves:
+   - Book metadata from MongoDB
+   - ML models from Blob Storage
+   - User credentials via Entra ID
+4. Recommendation engine processes similarity matrix
+5. Results returned through API to frontend
+
+**Security Components:**
+- 🔒 Azure Entra ID for authentication
+- 🔑 SSH Key access to Azure VM
+- 🔐 Secrets management via GitHub Secrets
+- 🛡️ Cloudflare DDoS protection
+- 🔍 Port filtering (22, 80, 5000 only)
+
+**Network Configuration:**
+```bash
+az vm open-port \
+    --resource-group myResourceGroup \
+    --name myVM \
+    --port 5000 \
+    --priority 1001
+```
+
+## Suggested Improvements
+1. Add **Azure Application Gateway** for SSL termination and WAF protection
+2. Implement **Azure Monitor** for performance tracking
+3. Use **Azure Key Vault** for secret management
+4. Add **Redis Cache** on Azure for API response caching
+5. Implement **Load Balancer** for horizontal scaling
+
+## Cost Optimization Tips
+- Use **Azure Spot VMs** for development environments
+- Enable **Blob Storage Tiering** (Hot/Cool/Archive)
+- Configure **Auto-shutdown** for non-production VMs
+- Use **MongoDB Atlas M0** free tier for development
+
+Would you like me to provide:
+1. Detailed security configuration guide for Azure Entra ID
+2. Sample Azure CLI commands for infrastructure setup
+3. Cost estimation breakdown for the architecture
+4. Alternative architecture using Azure Kubernetes Service (AKS)?
+
