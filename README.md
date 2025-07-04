@@ -103,7 +103,7 @@ Python · Flask · MongoDB · Docker · Azure ML
 ```
 **Frontend**
 ```plaintext
-React · Tailwind CSS · Framer Motion · Cloudflare
+HTML · CSS · JavaScript · Cloudflare
 ```
 **DevOps**
 ```plaintext
