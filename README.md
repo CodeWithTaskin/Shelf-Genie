@@ -1,4 +1,4 @@
-# Book Recommendation System for International Remote Jobs 🚀
+# Production-Grade MLOps Book Recommendation System 🚀
 
 ![Project Banner](https://github.com/CodeWithTaskin/Shelf-Genie/blob/adf0ce0ea36ddb472e7cb056f3e1b507d6590050/asset/Screenshot%202025-07-02%20083605.png)  
 
